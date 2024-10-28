@@ -7,14 +7,15 @@
 
 import UIKit
 
-class LogoTableViewCell: UITableViewCell {
+class LogoTableViewCell: UITableViewCell, ConfigurableCell {
 
     static let identifier = "LogoTableViewCell"
     
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person")
+     //   imageView.image = UIImage(systemName: "person")
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -29,7 +30,7 @@ class LogoTableViewCell: UITableViewCell {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Sade"
+       // label.text = "Sade"
         label.textColor = .black
         label.font = .boldSystemFont(ofSize: 20)
         return label
@@ -55,21 +56,23 @@ class LogoTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(logo: String, name: String){
-        logoImageView.image = UIImage(named: logo)
-        nameLabel.text = name
+    func configure(data: LogoModel){
+        logoImageView.image = UIImage(named: data.logo)
+        nameLabel.text = data.name
         
     }
     
     private func addConstraint(){
         NSLayoutConstraint.activate([
+            //logo
             logoImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             logoImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
             logoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             logoImageView.widthAnchor.constraint(equalToConstant: 40),
+            logoImageView.heightAnchor.constraint(equalToConstant: 40),
             
             stackView.centerYAnchor.constraint(equalTo: logoImageView.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: logoImageView.leadingAnchor, constant: 10),
+            stackView.leadingAnchor.constraint(equalTo: logoImageView.trailingAnchor, constant: 10),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
         ])
     }

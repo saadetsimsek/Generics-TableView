@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    private let viewModel: ViewModel
+    let viewModel: ViewModel
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -28,6 +28,8 @@ class ViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,16 +38,17 @@ class ViewController: UIViewController {
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
-        
-        register()
+    //    register()
         setConstraints()
+        viewModel.items.forEach{$0.register(tableView)}
     }
 
-    private func register(){
+ /*   private func register(){
         tableView.register(LogoTableViewCell.self, forCellReuseIdentifier: LogoTableViewCell.identifier)
         tableView.register(PhotoTableViewCell.self, forCellReuseIdentifier: PhotoTableViewCell.identifier)
         tableView.register(DescriptionTableViewCell.self, forCellReuseIdentifier: DescriptionTableViewCell.identifier)
     }
+  */
     
     private func setConstraints(){
         NSLayoutConstraint.activate([
@@ -59,28 +62,20 @@ class ViewController: UIViewController {
 }
 
 
-extension UIViewController:  UITableViewDelegate,  UITableViewDataSource {
+extension ViewController:  UITableViewDelegate,  UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return viewModel.items.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if indexPath.row == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: LogoTableViewCell.identifier, for: indexPath) as! LogoTableViewCell
-            return cell
-        }
+        let item = viewModel.items[indexPath.row]
         
-        if indexPath.row == 1 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: PhotoTableViewCell.identifier, for: indexPath) as! PhotoTableViewCell
-            return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: type(of: item).reuseID) else{
+            return UITableViewCell()
         }
-        
-        if indexPath.row == 3 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: DescriptionTableViewCell.identifier, for: indexPath) as! DescriptionTableViewCell
-            return cell
-        }
-        
-        return UITableViewCell()
+        item.configure(cell: cell)
+        return cell
     }
 }
+

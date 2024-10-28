@@ -7,15 +7,17 @@
 
 import UIKit
 
-class DescriptionTableViewCell: UITableViewCell {
+class DescriptionTableViewCell: UITableViewCell, ConfigurableCell {
 
     static let identifier = "DescriptionTableViewCell"
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Boosty"
         label.textColor = .orange
         label.font = .systemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 0
         return label
     }()
     
@@ -23,14 +25,15 @@ class DescriptionTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         addSubview(descriptionLabel)
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(text: String){
-        descriptionLabel.text = text
+    func configure(data: String){
+        descriptionLabel.text = data
     }
     
     private func setConstraints(){
